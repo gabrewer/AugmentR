@@ -14,7 +14,7 @@ var openai = // an Azure OpenAI instance with a few deployments
 
 var qdrant = // the qdrant container the app will use for vector search
     builder.AddContainer("qdrant", "qdrant/qdrant")
-           .WithEndpoint(hostPort: 6333, name: "qdrant", scheme: "http");
+           .WithEndpoint(port: 6333, name: "qdrant", scheme: "http");
 
 var pubsub = // a redis container the app will use for simple messaging to the frontend
     builder.AddRedis("pubsub");

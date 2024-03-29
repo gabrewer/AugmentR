@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 		<RuntimeVersion>8.0.2</RuntimeVersion>
-		<AspireVersion>8.0.0-preview.6.24177.20</AspireVersion>
+		<AspireVersion>8.1.0-preview.1.24179.5</AspireVersion>
 		<AspireNuGetSource>dotnet8</AspireNuGetSource>
 	</PropertyGroup>
 	<ItemGroup>
