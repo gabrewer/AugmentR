@@ -23,13 +23,20 @@ public class AugmentationWorker(
                 {
                     logger.LogInformation("Semantic Kernel client is already initialized.");
                 }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error initializing Semantic Kernel client.");
+            }
 
+            try
+            {
                 await urlAugmentor.Load();
                 await urlListAugmentor.Load();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error initializing Semantic Kernel client.");
+                logger.LogError(ex, "Error during augmentation.");
             }
 
             await liveUpdateService.ShowSystemUpdate("System is up");
@@ -40,5 +47,7 @@ public class AugmentationWorker(
     {
         await urlAugmentor.OnStarted();
         await urlListAugmentor.OnStarted();
+
+        await base.StartAsync(cancellationToken);
     }
 }

@@ -1,23 +1,27 @@
+var gptDeployment = "gpt-35-turbo";
+var adaDeployment = "text-embedding-ada-002";
 
 var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddAzureProvisioning();
 
-var openai = // an Azure OpenAI instance with a few deployments
-    builder.AddAzureOpenAI("openai")
-           .WithDeployment(new("gpt-35-turbo", "gpt-35-turbo", "0613"))
-           .WithDeployment(new("text-embedding-ada-002", "text-embedding-ada-002", "2"));
+var secrets = builder.AddAzureKeyVault("secrets");
 
-var pubsub = // a redis container the app will use for simple messaging to the frontend
-    builder.AddRedis("pubsub");
+var openai = // an Azure OpenAI instance with a few deployments
+             builder.AddAzureOpenAI("openai")
+                    .AddDeployment(new(gptDeployment, gptDeployment, "0613"))
+                    .AddDeployment(new(adaDeployment, adaDeployment, "2"));
 
 var qdrant = // the qdrant container the app will use for vector search
     builder.AddContainer("qdrant", "qdrant/qdrant")
            .WithEndpoint(hostPort: 6333, name: "qdrant", scheme: "http");
 
+var pubsub = // a redis container the app will use for simple messaging to the frontend
+    builder.AddRedis("pubsub");
+
 var storage = // an azure storage account
     builder.AddAzureStorage("storage")
-               .RunAsEmulator(); // use azurite for local development
+           .RunAsEmulator(); // use azurite for local development
 
 var blobs =   // a blob container in the storage account
     storage.AddBlobs("AzureBlobs");
@@ -28,6 +32,9 @@ var queues =  // a queue in the storage account
 var backend = // the main .net app that will perform augmentation and vector search
     builder.AddProject<Projects.Backend>("backend")
            .WithEnvironment("QDRANT_ENDPOINT", qdrant.GetEndpoint("qdrant"))
+           .WithEnvironment("AZURE_OPENAI_GPT_NAME", gptDeployment)
+           .WithEnvironment("AZURE_OPENAI_TEXT_EMBEDDING_NAME", adaDeployment)
+           .WithEnvironment("AZURE_OPENAI_ENDPOINT", openai.Resource.ConnectionString)
            .WithReference(pubsub)
            .WithReference(blobs)
            .WithReference(queues)

@@ -4,6 +4,9 @@ builder.AddServiceDefaults();
 builder.AddAzureQueueClient("AzureQueues");
 builder.AddAzureBlobClient("AzureBlobs");
 builder.AddRedisClient("pubsub");
+builder.AddAzureOpenAIClient("openai");
+builder.AddAzureKeyVaultClient("secrets");
+
 builder.Services.AddSingleton<SemanticKernelWrapper>();
 builder.Services.AddSingleton<UrlAugmentor>();
 builder.Services.AddSingleton<UrlListAugmentor>();
@@ -13,10 +16,6 @@ builder.Services.AddHostedService<AugmentationWorker>();
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
-
-if (app.Environment.IsDevelopment())
-{
-}
 
 app.MapGet("/", () => Results.Ok("Backend is up"))
    .WithName("IsUp")
