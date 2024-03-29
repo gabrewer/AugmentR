@@ -5,7 +5,6 @@ builder.AddAzureQueueClient("AzureQueues");
 builder.AddAzureBlobClient("AzureBlobs");
 builder.AddRedisClient("pubsub");
 builder.AddAzureOpenAIClient("openai");
-builder.AddAzureKeyVaultClient("secrets");
 
 builder.Services.AddSingleton<SemanticKernelWrapper>();
 builder.Services.AddSingleton<UrlAugmentor>();

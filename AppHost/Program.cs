@@ -5,8 +5,6 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddAzureProvisioning();
 
-var secrets = builder.AddAzureKeyVault("secrets");
-
 var openai = // an Azure OpenAI instance with a few deployments
              builder.AddAzureOpenAI("openai")
                     .AddDeployment(new(gptDeployment, gptDeployment, "0613"))
